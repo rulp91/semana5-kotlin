@@ -2,18 +2,19 @@ package controller
 
 import Event.CloseDirChooserEvent
 import com.google.common.eventbus.Subscribe
+import com.google.common.io.Resources
 import view.DirChooserView
 import java.awt.Dimension
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.util.*
+import javax.swing.ImageIcon
 import javax.swing.JFrame
 
 /**
  * Controlador de la vista principal
  */
 class MainViewController {
-    private val frame = JFrame("")
+    private val frame = JFrame("Kotlin")
 
     /**
      * Muestra un JFrame de selección de directorio
@@ -27,8 +28,11 @@ class MainViewController {
                 }
             }
         )
+        val iconKotlin = Resources.getResource("img.png")
+        val imageIcon = ImageIcon(iconKotlin).image
+        frame.iconImage = imageIcon
         frame.contentPane.add(panel, "Center")
-        frame.size =   Dimension(400, 200)
+        frame.size =   Dimension(500, 200)
         frame.isVisible = true
     }
 

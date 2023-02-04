@@ -17,6 +17,7 @@ import java.nio.file.Files
 class DirProcessController private constructor() {
     @Autowired
     private val eventbus = EventBus()
+    private var searchString: String? = null
 
     init {
         eventbus.register(MainViewController.instance)
@@ -30,6 +31,7 @@ class DirProcessController private constructor() {
     @Subscribe
     fun onEvent(event: SelectedDirEvent) {
         try {
+            searchString = event.searchString
             loopIterativelyDir(event.file)
             eventbus.post(CloseDirChooserEvent())
         } catch (e: IOException) {
@@ -48,25 +50,25 @@ class DirProcessController private constructor() {
             val files = file.listFiles()
             for (currentFile in files) {
                 if (currentFile.isDirectory) loopIterativelyDir(currentFile)
-                if (isTextFile(currentFile)) processTextFile(currentFile)
+                if (isTextFile(currentFile)) buscar(currentFile, searchString)
             }
         }
-        if (isTextFile(file)) processTextFile(file)
+        if (isTextFile(file)) buscar(file, searchString)
     }
 
     /**
-     * Procesa la búsqueda de texto dentro del fichero
+     * Función demandada por el ejercicio
      * @param file
+     * @param searchString
      * @throws IOException
      */
     @Throws(IOException::class)
-    private fun processTextFile(file: File) {
-        val reader: BufferedReader
-        reader = BufferedReader(FileReader(file))
-        var line = reader.readLine()
+    private fun buscar(file: File, searchString: String?) {
+        val reader = BufferedReader(FileReader(file))
+        var line: String = reader.readLine()
         var dirIsPrinted = false
         while (line != null) {
-            if (line.contains("wax synthase")) {
+            if (line.contains(searchString!!)) {
                 if (!dirIsPrinted) {
                     println(file.absolutePath)
                     dirIsPrinted = true
