@@ -11,6 +11,9 @@ repositories {
 }
 
 dependencies {
+
+    implementation("com.google.guava:guava:11.0.2")
+    implementation("com.liferay:org.springframework.beans:5.2.22.LIFERAY-PATCHED-1")
     testImplementation(kotlin("test"))
 }
 
