@@ -49,11 +49,14 @@ class DirProcessController private constructor() {
         if (file.isDirectory) {
             val files = file.listFiles()
             for (currentFile in files) {
-                if (currentFile.isDirectory) loopIterativelyDir(currentFile)
-                if (isTextFile(currentFile)) buscar(currentFile, searchString)
+                if (currentFile.isDirectory)
+                    loopIterativelyDir(currentFile)
+                if (isTextFile(currentFile))
+                    buscar(currentFile, searchString)
             }
         }
-        if (isTextFile(file)) buscar(file, searchString)
+        if (isTextFile(file))
+            buscar(file, searchString)
     }
 
     /**
@@ -64,20 +67,20 @@ class DirProcessController private constructor() {
      */
     @Throws(IOException::class)
     private fun buscar(file: File, searchString: String?) {
-        val reader = BufferedReader(FileReader(file))
-        var line: String = reader.readLine()
+
         var dirIsPrinted = false
-        while (line != null) {
-            if (line.contains(searchString!!)) {
-                if (!dirIsPrinted) {
-                    println(file.absolutePath)
-                    dirIsPrinted = true
+        BufferedReader(FileReader(file)).use { br ->
+            var line: String?
+            while (br.readLine().also { line = it } != null) {
+                if (line?.contains(searchString!!) == true) {
+                    if (!dirIsPrinted) {
+                        println(file.absolutePath)
+                        dirIsPrinted = true
+                    }
+                    println("\t" + line)
                 }
-                println("\t" + line)
             }
-            line = reader.readLine()
         }
-        reader.close()
     }
 
     /**
